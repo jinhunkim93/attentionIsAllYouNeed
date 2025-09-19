@@ -1,7 +1,6 @@
 # multiHeadAttention.py
 import torch.nn as nn
-import torch.nn.functional as F
-import SubLayer.scaledDotProductAttention as scaledDotProductAttention
+from SubLayer.scaledDotProductAttention import ScaledDotProductAttention
 
 class MultiHeadAttention(nn.Module):
     def __init__(self, d_model, num_heads, dropout=0.1):
@@ -16,7 +15,7 @@ class MultiHeadAttention(nn.Module):
         self.linear_k = nn.Linear(d_model, d_model)
         self.linear_v = nn.Linear(d_model, d_model)
         self.linear_out = nn.Linear(d_model, d_model)
-        self.attention = scaledDotProductAttention.Attention(d_model, dropout)
+        self.attention = ScaledDotProductAttention(d_model, dropout)
 
 
     def forward(self, query, key, value, mask=None):

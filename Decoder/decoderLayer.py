@@ -6,7 +6,7 @@
 
 import torch.nn as nn
 from SubLayer.multiHeadAttention import MultiHeadAttention
-from SubLayer.positionWiseFeedForward import PositionWiseFeedForward
+from SubLayer.positionWiseFeedForwardNetwork import PositionWiseFeedForwardNetwork
 # from SubLayer.layerNormalization import LayerNormalization
 
 class DecoderLayer(nn.Module):
@@ -15,7 +15,7 @@ class DecoderLayer(nn.Module):
         # Three sub-layers: self-attention, encoder-decoder attention, and feed-forward network
         self.self_attn = MultiHeadAttention(d_model, num_heads, dropout)
         self.enc_dec_attn = MultiHeadAttention(d_model, num_heads, dropout)
-        self.ffn = PositionWiseFeedForward(d_model, d_ff, dropout)
+        self.ffn = PositionWiseFeedForwardNetwork(d_model, d_ff, dropout)
         # self.norm1 = LayerNormalization(d_model)
         # self.norm2 = LayerNormalization(d_model)
         # self.norm3 = LayerNormalization(d_model)
