@@ -18,11 +18,15 @@ Data Preparation: Input Tokens (BPE Encoding) -> Input Embedding -> Position Enc
 
 
 * layerNormalization, dropout
-Batch Size: Number of Samples to look at before updating
+We apply dropout [33] to the output of each sub-layer, before it is added to the
+sub-layer input and normalized. In addition, we apply dropout to the sums of the embeddings and the
+positional encodings in both the encoder and decoder stacks. For the base model, we use a rate of
+Pdrop = 0.1.
 
-Number of Tokens : 
-Embedding (Hidden Layer) Number : number of 
-Batch Size : Number of 
+Input Variables
+
+Embedding (Hidden Layer) Number : number of values to represent a token, also the number of activation functions applied in word embedding process
+Batch Size : Number of sequences processed per batch, also the number of Samples to look at before updating.
 
 Number of Encoder Layers : Number of layers used for the Encoder
 Number of Decoder Layers : Number of layers used for the Decoder
@@ -32,3 +36,5 @@ Number of Decoder Attention Heads : Number of Heads for the Decoder MultiHeadAtt
 
 Encoder DropOut Probability : Probability value to set a value to zero
 Decoder DropOut Probability : Probability value to set a value to zero
+
+Position Wise Feed ForwardInner Layer Inner Layer Dimension : Original paper set this value to 2048
