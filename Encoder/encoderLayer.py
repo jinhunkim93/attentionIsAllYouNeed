@@ -23,10 +23,10 @@ class EncoderLayer(nn.Module):
     def forward(self, x, src_mask=None):
         # Self-attention sub-layer
         # Add residual connection and normalize
-        x = self.norm1(self.dropout(self.self_attn(x, x, x, src_mask)) + x)
+        x = self.norm1(x + self.dropout(self.self_attn(x, x, x, src_mask)))
 
         # Position-wise Fully Connected Feed-forward network sub-layer
         # Add residual connection and normalize
-        x = self.norm2(self.dropout(self.ffn(x)) + x)
+        x = self.norm2(x + self.dropout(self.ffn(x)))
 
         return x
