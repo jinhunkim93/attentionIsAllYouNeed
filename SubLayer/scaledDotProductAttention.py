@@ -8,9 +8,9 @@ import torch
 import torch.nn as nn
 import torch.nn.functional as F
 
-class Attention(nn.Module):
+class ScaledDotProductAttention(nn.Module):
     def __init__(self, d_model, dropout=0.1):
-        super(Attention, self).__init__()
+        super(ScaledDotProductAttention, self).__init__()
         self.scale = 1 / (d_model ** 0.5)
         self.dropout = nn.Dropout(dropout)
 
