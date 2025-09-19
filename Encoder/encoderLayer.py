@@ -7,15 +7,12 @@
 import torch.nn as nn
 from SubLayer.multiHeadAttention import MultiHeadAttention
 from SubLayer.positionWiseFeedForwardNetwork import PositionWiseFeedForwardNetwork
-# from SubLayer.layerNormalization import LayerNormalization
 
 class EncoderLayer(nn.Module):
     def __init__(self, d_model, num_heads, d_ff, dropout=0.1):
         super(EncoderLayer, self).__init__()
         self.self_attn = MultiHeadAttention(d_model, num_heads, dropout)
         self.ffn = PositionWiseFeedForwardNetwork(d_model, d_ff, dropout)
-        # self.norm1 = LayerNormalization(d_model)
-        # self.norm2 = LayerNormalization(d_model)
         self.norm1 = nn.LayerNorm(d_model)
         self.norm2 = nn.LayerNorm(d_model)
         self.dropout = nn.Dropout(dropout)
