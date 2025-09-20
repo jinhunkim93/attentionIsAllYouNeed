@@ -8,8 +8,9 @@
 import torch
 import torch.nn as nn
 import math
+
 class PositionalEncoding(nn.Module):
-    def __init__(self, d_model, max_len=5000):
+    def __init__(self, d_model, max_len=100):
         super(PositionalEncoding, self).__init__()
         # Create a matrix of shape (max_len, d_model) to hold the positional encodings
         pe = torch.zeros(max_len, d_model)

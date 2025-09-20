@@ -10,7 +10,6 @@ class MultiHeadAttention(nn.Module):
         self.d_model = d_model
         self.num_heads = num_heads
         self.d_k = d_model // num_heads
-        
         self.linear_q = nn.Linear(d_model, d_model)
         self.linear_k = nn.Linear(d_model, d_model)
         self.linear_v = nn.Linear(d_model, d_model)

@@ -9,7 +9,7 @@ from Encoder.encoderLayer import EncoderLayer
 
 class Encoder(nn.Module):
     # d_model: model dimension, num_heads: number of attention heads, d_ff: feed-forward dimension, num_layers: number of encoder layers, dropout: dropout rate
-    def __init__(self, d_model, num_heads, d_ff, num_layers, dropout=0.1):
+    def __init__(self, d_model, num_layers, num_heads, d_ff, dropout=0.1):
         super(Encoder, self).__init__()
         # Note: This implementation assumes that the input is already embedded and has positional encoding applied
         # Stack of encoder layers
@@ -18,10 +18,11 @@ class Encoder(nn.Module):
             for _ in range(num_layers)
         ])
 
-    # input : x: source sequence, src_mask: source mask
+    # input : src_seq: source sequence, src_mask: source mask
     # output: transformed source sequence
-    def forward(self, x, src_mask=None):
+    def forward(self, src_seq, src_mask=None):
         # Pass the input through each encoder layer in sequence where the output of one layer is the input to the next
+        # src_seq -> layer(src_seq, src_mask) -> layer(src_seq, src_mask) -> ... -> layer(src_seq, src_mask) -> src_seq num_layers times
         for layer in self.layers:
-            x = layer(x, src_mask)
-        return x
+            src_seq = layer(src_seq, src_mask)
+        return src_seq

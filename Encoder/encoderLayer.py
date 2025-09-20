@@ -11,19 +11,33 @@ from SubLayer.positionWiseFeedForwardNetwork import PositionWiseFeedForwardNetwo
 class EncoderLayer(nn.Module):
     def __init__(self, d_model, num_heads, d_ff, dropout=0.1):
         super(EncoderLayer, self).__init__()
+        # Two sub-layers: self-attention and feed-forward network
+
+        # Sub-layer 1 : Self-Attention
         self.self_attn = MultiHeadAttention(d_model, num_heads, dropout)
+        # Sub-layer 2 : Position-wise Fully Connected Feed-forward network
         self.ffn = PositionWiseFeedForwardNetwork(d_model, d_ff, dropout)
+
+        # Layer normalization for each sub-layer, implemented with nn.LayerNorm, which is an implementation of "Layer Normalization" paper
         self.norm1 = nn.LayerNorm(d_model)
         self.norm2 = nn.LayerNorm(d_model)
+
+        # Dropout layer to prevent overfitting
         self.dropout = nn.Dropout(dropout)
 
-    def forward(self, x, src_mask=None):
-        # Self-attention sub-layer
-        # Add residual connection and normalize
-        x = self.norm1(x + self.dropout(self.self_attn(x, x, x, src_mask)))
+    # input : src_seq: source sequence, src_mask: source mask
+    # output: transformed source sequence
+    def forward(self, src_seq, src_mask=None):
+        # Encoder Layer forward pass
 
-        # Position-wise Fully Connected Feed-forward network sub-layer
-        # Add residual connection and normalize
-        x = self.norm2(x + self.dropout(self.ffn(x)))
+        # Sub-layer 1 : Self-Attention
+        # Apply self-attention, add residual connection, and normalize
+        # Apply source mask to prevent attention to padding tokens in the source sequence
+        src_seq = self.norm1(src_seq + self.dropout(self.self_attn(src_seq, src_seq, src_seq, src_mask)))
 
-        return x
+        # Sub-layer 2 : Position-wise Fully Connected Feed-forward network
+        # Apply feed-forward network, add residual connection, and normalize
+        # Apply dropout to the output of the feed-forward network before adding the residual connection
+        src_seq = self.norm2(src_seq + self.dropout(self.ffn(src_seq)))
+
+        return src_seq

@@ -38,3 +38,60 @@ Encoder DropOut Probability : Probability value to set a value to zero
 Decoder DropOut Probability : Probability value to set a value to zero
 
 Position Wise Feed ForwardInner Layer Inner Layer Dimension : Original paper set this value to 2048
+
+Basics of Training a Model
+
+Data Types
+Training Data
+Validation Data
+Testing Data
+
+
+
+What does the reader need to first understand this paper?
+
+What is a Tensor?
+Basics of Pytorch
+
+
+The Goal of the Repo is provide an introduction to Machine Learning World.
+It will guide the average Joe step-by-step through the paper "Attention is All You Need".
+I suggest having a copy of the original paper in hand as the Code structure closely mimics the naming convention and we will also be referring to it repeatedly.
+
+
+Set Up Phase
+
+Data Preprocessing
+    Input :
+    Output:
+    User Defined Constants: Dmodel
+
+    Byte-Pair Encoding
+
+    Batch by same sequence (sentence) length.
+
+    Embedding (3.4 Embeddings and Softmax)
+
+        Implementation: PreProcessing/wordEmbedding
+
+    Positional Encoding (Section 3.5 Positional Encoding)
+
+        Implementation: PreProcessing/positionalEncoding.py
+
+
+
+Transformer
+    Input :
+    Output:
+
+    Encoder
+        Input :
+        Output:
+    
+    Decoder
+        Input :
+        Output:
+    
+    CleanUp
+        Input :
+        Output:

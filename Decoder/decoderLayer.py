@@ -7,7 +7,6 @@
 import torch.nn as nn
 from SubLayer.multiHeadAttention import MultiHeadAttention
 from SubLayer.positionWiseFeedForwardNetwork import PositionWiseFeedForwardNetwork
-# from SubLayer.layerNormalization import LayerNormalization
 
 class DecoderLayer(nn.Module):
     def __init__(self, d_model, num_heads, d_ff, dropout=0.1):
@@ -16,31 +15,35 @@ class DecoderLayer(nn.Module):
         self.self_attn = MultiHeadAttention(d_model, num_heads, dropout)
         self.enc_dec_attn = MultiHeadAttention(d_model, num_heads, dropout)
         self.ffn = PositionWiseFeedForwardNetwork(d_model, d_ff, dropout)
-        # self.norm1 = LayerNormalization(d_model)
-        # self.norm2 = LayerNormalization(d_model)
-        # self.norm3 = LayerNormalization(d_model)
+        # Layer normalization for each sub-layer, implemented with nn.LayerNorm, which is an implementation of "Layer Normalization" paper
         self.norm1 = nn.LayerNorm(d_model)
         self.norm2 = nn.LayerNorm(d_model)
         self.norm3 = nn.LayerNorm(d_model)
+        # Dropout layer to prevent overfitting
         self.dropout = nn.Dropout(dropout)
 
-    # input : x: target sequence, enc_output: encoder output, src_mask: source mask, tgt_mask: target mask
-    # output: transformed target sequence
-    def forward(self, x, enc_output, src_mask=None, tgt_mask=None):
-        # Self-attention sub-layer
+
+    def forward(self, trg_seq, enc_output, src_mask=None, trg_mask=None):
+        """
+        Decoder Layer forward pass
+        inputs: trg_seq: target sequence, enc_output: encoder output, src_mask: source mask, trg_mask: target mask
+        output: transformed target sequence
+        """
+
+        # Sub-layer 1 : Self-attention
         # Apply self-attention, add residual connection, and normalize
         # Apply target mask to prevent attention to future tokens in the target sequence
-        x = self.norm1(x + self.dropout(self.self_attn(x, x, x, tgt_mask)))
-        
-        # Encoder-decoder attention sub-layer
+        trg_seq = self.norm1(trg_seq + self.dropout(self.self_attn(trg_seq, trg_seq, trg_seq, trg_mask)))
+
+        # Sub-layer 2 : Encoder-decoder attention
         # Apply encoder-decoder attention, add residual connection, and normalize
         # Use the encoder output as key and value, and the target sequence as query
         # Apply source mask to prevent attention to padding tokens in the source sequence
-        x = self.norm2(x + self.dropout(self.enc_dec_attn(x, enc_output, enc_output, src_mask)))
+        trg_seq = self.norm2(trg_seq + self.dropout(self.enc_dec_attn(trg_seq, enc_output, enc_output, src_mask)))
         
-        # Feed-forward network sub-layer
+        # Sub-layer 3 : Position-wise Fully Connected Feed-forward network
         # Apply feed-forward network, add residual connection, and normalize
         # Apply dropout to the output of the feed-forward network before adding the residual connection
-        x = self.norm3(x + self.dropout(self.ffn(x)))
-    
-        return x
+        trg_seq = self.norm3(trg_seq + self.dropout(self.ffn(trg_seq)))
+
+        return trg_seq
